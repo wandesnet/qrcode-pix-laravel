@@ -1,123 +1,43 @@
-## Introduction
+## Introdução
 
-This integration package with Mercado Pago (not the official one)
+Este pacote foi implementado inspirado no repositório do **Renato Monteiro Batista** disponível [aqui](https://github.com/renatomb/php_qrcode_pix) 
 
-Documentation official: https://www.mercadopago.com.br/developers
+O objetivo deste pacote é facilitar a geração de QRCode para pagamentos via PIX.
 
 ## Required
 
 - **PHP 8.1+**
+- **Laravel 10.0+**
 
-## To get started, using the Composer package manager
+## Instalação via composer
 
-    composer require wandesnet/mercadopago-laravel
-Next, publish resources using the vendor:publish command:
+    composer require wandesnet/qrcode-pix-laravel
+Para utilizar a facade, adicione o seguinte código no seu arquivo `config/app.php` na seção providers:
 
-    php artisan vendor:publish --provider="WandesCardoso\MercadoPago\MercadoPagoServiceProvider" 
+     WandesCardoso\Pix\PixServiceProvider::class,
 
-## Configuration
-
-After publishing the resources, its configuration file will be located at `.env`. This file allows you to configure the credentials of your Mercado Pago application.
-
-```php
-MP_ACCESS_TOKEN=
-```
     
 ## Usage
 
 ```php
-use WandesCardoso\MercadoPago\Facades\MercadoPago;
-
-$mp = MercadoPago::payment()->find('1232324');
-
-var_dump($mp);
-
-```
-Create a payment
-
-```php
-use WandesCardoso\MercadoPago\Facades\MercadoPago;
-use WandesCardoso\MercadoPago\DTO\Item;
-use WandesCardoso\MercadoPago\DTO\Payer;
-use WandesCardoso\MercadoPago\DTO\Payment;
-
-    $payer = new Payer(
-            'test_user@testuser.com'
-        );
-
+use WandesCardoso\Pix\Facades\Pix;
+use WandesCardoso\Pix\Enums\TypeKey;
     
-    $item = Item::make()
-                ->setTitle('title product')
-                ->setQuantity(1)
-                ->setUnitPrice(100)
-                ->setDescription('description product')
-                ->setPictureUrl('https://www.mercadopago.com/org-img/MP3/home/logomp3.gif')
-                ->setCategoryId('electronics');
-
-    $payment = Payment::make()
-                ->setPayer($payer)
-                ->addItem($item)
-                ->setPaymentMethodId('pix')
-                ->setExternalReference('123434567');
-
-    $response = MercadoPago::payment()->create($payment);
-
-    var_dump($response);
+    $pix = Pix::make(
+        typeKey: TypeKey::EMAIL,
+        key: 'wandes2030@gmail.com',
+        amount: 12,
+        recipient: 'Wandes Cardoso',
+        identification: '12345678901',
+        city: 'Corrente',
+        description: 'Pagamento do pedido',
+        isUniquePayment: false
+    );
+    
+    $pix->getQrCode(); //gera a imagem do QRCode em base64
+    
+    $pix->generateCopyPasteCode(); //gera o código copiar e colar
 ```
-Crate a preference
-
-```php
-use WandesCardoso\MercadoPago\Facades\MercadoPago;
-use WandesCardoso\MercadoPago\DTO\Item;
-use WandesCardoso\MercadoPago\DTO\BackUrls;
-use WandesCardoso\MercadoPago\DTO\Payer;
-use WandesCardoso\MercadoPago\DTO\Preference;
-
-        $payer = new Payer(
-                    'test_user@testuser.com',
-                );
-
-
-        $item = Item::make()
-                    ->setTitle('Title product 2')
-                    ->setQuantity(1)
-                    ->setUnitPrice(120)
-                    ->setDescription('description product 2')
-                    ->setPictureUrl('https://www.mercadopago.com/org-img/MP3/home/logomp3.gif')
-                    ->setCategoryId('electronics');
-
-        $preference = Preference::make()
-                    ->setPayer($payer)
-                    ->addItem($item)
-                    ->setBackUrls(new BackUrls(
-                        'https://www.mysite.com.br?success',
-                        'https://www.mysite.com.br?pending',
-                        'https://www.mysite.com.br?failure',
-                    ))
-                    ->setExternalReference('20');
-
-
-        $response = MercadoPago::preference()->create($preference);
-
-        var_dump($response);
-                    
-                    
-```
-
-## Methods available
-
-- `request()->payment()->find()`
-- `request()->payment()->create()`
-- `request()->payment()->update()`
-- `request()->payment()->search()`
-- `request()->preference()->find()`
-- `request()->preference()->create()`
-- `request()->preference()->update()`
-- `request()->preference()->search()`
-- `request()->get()`
-- `request()->post()`
-- `request()->put()`
-- `request()->delete()`
 
 ## Contributing
 
