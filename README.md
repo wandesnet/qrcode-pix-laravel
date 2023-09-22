@@ -12,11 +12,7 @@ O objetivo deste pacote é facilitar a geração de QRCode para pagamentos via P
 ## Instalação via composer
 
     composer require wandesnet/qrcode-pix-laravel
-Para utilizar a facade, adicione o seguinte código no seu arquivo `config/app.php` na seção providers:
-
-     WandesCardoso\Pix\PixServiceProvider::class,
-
-    
+ 
 ## Usage
 
 ```php
