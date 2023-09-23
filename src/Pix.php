@@ -55,10 +55,8 @@ class Pix
      * @param  string  $city the city of the payer
      * @param  string|null  $description the description
      * @param  bool  $isUniquePayment determines whether the payment is a single payment
-     *
-     * @return self
      */
-    public static function make(TypeKey $typeKey, string $key, float $amount, string $recipient, string $identification, string $city, ?string $description = null, bool $isUniquePayment = false): self
+    public function make(TypeKey $typeKey, string $key, float $amount, string $recipient, string $identification, string $city, ?string $description = null, bool $isUniquePayment = false): self
     {
         return new self($typeKey, $key, $amount, $recipient, $identification, $city, $description, $isUniquePayment);
     }
